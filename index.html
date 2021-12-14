@@ -4,19 +4,36 @@
 		<meta name="com.silverpop.brandeddomains" content="www.pages08.net,acoustic.com,ankurc176.github.io,ankurc178.github.io,cloud.goacoustic.com,google.com,postit.com" />
 		<meta name="com.silverpop.cothost" content="campaign-ca-1.goacoustic.com" />
 	        <script src="https://www.sc.pages08.net/lp/static/js/iMAWebCookie.js?3ffe9725-177d64fffb3-0dabe521464f81af54f1831dff3eeb60&h=www.pages08.net" type="text/javascript"></script>
-	<script>
+		</head>
+	<body>
 
-window.addEventListener('load', function(){
+		<p>&nbsp;</p>
+		<p>
+			See our offers for a flight to Mauritius: 
+			<a id="myLink" >Link</a>
+		</p>
+		<script type="text/javascript">
+			function getCookie(cname) 
+			{
+				let name = cname + "=";
+				let decodedCookie = decodeURIComponent(document.cookie);
+				let ca = decodedCookie.split(';');
+				for(let i = 0; i <ca.length; i++) 
+				{
+					let c = ca[i];
+					while (c.charAt(0) == ' ') 
+						c = c.substring(1);
+					if (c.indexOf(name) == 0) 
+						return c.substring(name.length, c.length);
+				}
+				return "";
+			}
 
-ewt.cot({action:"Purchase",detail:"Cross Domain Product",amount:"1.24"});
+			var cookie = getCookie("com.silverpop.iMAWebCookie"); 
 
-});
+			var url = new URL("http://airaustral3.cab05.net/D17112021095336.cfm?IMAWebCookie=" + cookie);
 
-</script>
-
-
-	</head>
-<body>
-Anchor Cross Domain tag 
-</body>
+			document.getElementById("myLink").setAttribute("href", url );
+		</script>
+	</body>
 </html>
