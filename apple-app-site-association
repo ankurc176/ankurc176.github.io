@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "QXQ67VKX2B.co.acoustic.mobile.push.sample.ios",
+                "paths": ["*"]
+            }
+        ]
+    }
+}
