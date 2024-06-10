@@ -10,30 +10,7 @@
 		<p>&nbsp;</p>
 		<p>
 			See our offers for a flight to Mauritius: 
-			<a id="myLink" >Link</a>
+			<a href="/Anchortag.html">link 1</a>
 		</p>
-		<script type="text/javascript">
-			function getCookie(cname) 
-			{
-				let name = cname + "=";
-				let decodedCookie = decodeURIComponent(document.cookie);
-				let ca = decodedCookie.split(';');
-				for(let i = 0; i <ca.length; i++) 
-				{
-					let c = ca[i];
-					while (c.charAt(0) == ' ') 
-						c = c.substring(1);
-					if (c.indexOf(name) == 0) 
-						return c.substring(name.length, c.length);
-				}
-				return "";
-			}
-
-			var cookie = getCookie("com.silverpop.iMAWebCookie"); 
-
-			var url = new URL("https://ankurc178.github.io/Anchortag.html?IMAWebCookie=" + cookie);
-
-			document.getElementById("myLink").setAttribute("href", url );
-		</script>
 	</body>
 </html>
