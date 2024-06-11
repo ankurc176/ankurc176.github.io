@@ -9,28 +9,19 @@
     <script src="https://www.sc.pages08.net/lp/static/js/iMAWebCookie.js?3ffe9725-177d64fffb3-0dabe521464f81af54f1831dff3eeb60&h=www.pages08.net" type="text/javascript"></script>
 </head>
 <body style="background-color: black;">
-    <a href="https://www.google.com" onclick="track(event)" style="color: white;">Go to google and track link click. Changes 4</a><br>
-    <a href="Anchortag.html" onclick="track(event)" style="color: white;">Go to about and track link click</a>
+   <a href="https://www.google.com" target="_self" onclick="track()" style="color: white;">Go to google and track link click changes 1</a><br>
+    <a href="Anchortag.html" target="_self" onclick="track()" style="color: white;">Go to about and track link click</a>
     <hr>
-    <a href="https://www.google.com" onclick="trackLink(event, this)" style="color: white;">Go to google and track link click</a><br>
-    <a href="Anchortag.html" onclick="trackLink(event, this)" style="color: white;">Go to about and track link click</a>
+    <a href="https://www.google.com" target="_self" onclick="trackLink(this)" style="color: white;">Go to google and track link click</a><br>
+    <a href="Anchortag.html" target="_self" onclick="trackLink(this)" style="color: white;">Go to about and track link click</a>
     <script>
-        let trackLink = (event, link) => {
-            event.preventDefault();
+        let trackLink = (link) => {
             console.log('start');
             ewt.trackLink({name: 'sample name', type: 'click', link: link});
             console.log('end');
-            setTimeout(() => {
-                window.location.href = link.href;
-            }, 100); // Delay to ensure tracking is sent before navigation
         }
-
-        let track = (event) => {
-            event.preventDefault();
-            ewt.track({name:'chapter', type: 'click', link: event.target.href});
-            setTimeout(() => {
-                window.location.href = event.target.href;
-            }, 100); // Delay to ensure tracking is sent before navigation
+        let track = () => {
+            ewt.track({type: 'link', name: 'sample name'});
         }
     </script>
 </body>
