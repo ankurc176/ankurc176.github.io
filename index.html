@@ -10,7 +10,7 @@
 <!-- End of acoustichelpcenter1735562051 Zendesk Widget script -->
 <script>
     zE("messenger", "loginUser", function (callback) {
-    fetch("/api/get-jwt")  // Call your backend endpoint
+    fetch("http://localhost:8080/api/get-jwt")  // Call your backend endpoint
         .then(response => response.json())
         .then(data => callback(data.jwt));
 }, function (error) {
