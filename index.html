@@ -11,11 +11,6 @@
 <script>
     zE("messenger", "loginUser", function (callback) {
      fetch("http://localhost:8080/api/get-jwt", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    },
     body: JSON.stringify({
         externalId: "12345678",
         email: "himmat.kumar@acoustic.co",
