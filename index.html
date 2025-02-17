@@ -8,5 +8,14 @@
     <!-- Start of acoustichelpcenter1735562051 Zendesk Widget script -->
 <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c"> </script>
 <!-- End of acoustichelpcenter1735562051 Zendesk Widget script -->
+<script>
+    zE("messenger", "loginUser", function (callback) {
+    fetch("/api/get-jwt")  // Call your backend endpoint
+        .then(response => response.json())
+        .then(data => callback(data.jwt));
+}, function (error) {
+    console.error("Login failed:", error);
+});
+    </script>
 </body>
 </html>
