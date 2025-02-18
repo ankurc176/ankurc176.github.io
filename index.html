@@ -9,28 +9,39 @@
 <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c"> </script>
 <!-- End of acoustichelpcenter1735562051 Zendesk Widget script -->
 <script>
-    zE("messenger", "loginUser", function (callback) {
-    fetch("http://localhost:8080/api/get-jwt", {  // Ensure correct backend URL
-    method: "POST",  // ✅ Must be POST, not GET
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
+  zE("messenger", "loginUser",
+    function jwtCallback(callback) {
+      fetch("http://localhost:8080/api/get-jwt", { // ✅ Ensure correct backend URL
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          external_id: "12345678",
+          email: "himmatacousticr@gmail.com",
+          email_verified: true,
+          name: "Himmat Kumar"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.jwt) {
+          callback(data.jwt); // ✅ Pass the JWT to Zendesk
+        } else {
+          console.error("JWT not found in response:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching JWT:", error);
+      });
     },
-    body: JSON.stringify({
-        external_id: "12345678",
-        email: "himmatacousticr@gmail.com",
-        email_verified: true,
-        name: "Himmat Kumar"
-    })
-})
-.then(response => response.json())
-.then(data => console.log("JWT:", data.jwt))
-.catch(error => console.error("CORS Error:", error));
-
-}, function (error) {
-    console.error("Login failed:", error);
-});
-
-    </script>
+    function loginCallback(error) {
+      if (error) {
+        console.error("Login failed:", error);
+      }
+    }
+  );
+</script>
 </body>
 </html>
