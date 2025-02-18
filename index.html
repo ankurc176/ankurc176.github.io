@@ -11,7 +11,7 @@
 <script>
   zE("messenger", "loginUser",
     function jwtCallback(callback) {
-      fetch("http://localhost:8080/api/get-jwt", { // ✅ Ensure correct backend URL
+      fetch("http://localhost:8080/api/get-jwt", {
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +27,7 @@
       .then(response => response.json())
       .then(data => {
         if (data.jwt) {
-          callback(data.jwt); // ✅ Pass the JWT to Zendesk
+          callback(data.jwt);
         } else {
           console.error("JWT not found in response:", data);
         }
