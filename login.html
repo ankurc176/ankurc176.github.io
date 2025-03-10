@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+</head>
+<body>
+    <h2>Login</h2>
+    <button onclick="signInWithGoogle()">Login with Google</button>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
+            authDomain: "protect-github.firebaseapp.com",
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        function signInWithGoogle() {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).then((result) => {
+                window.location.href = "index.html"; // Redirect to main page after login
+            }).catch((error) => {
+                console.error("Error logging in:", error);
+            });
+        }
+    </script>
+</body>
+</html>
