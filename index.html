@@ -16,6 +16,9 @@
         firebase.auth().onAuthStateChanged(user => {
             if (!user) {
                 window.location.href = "login.html"; // Redirect to login page if not logged in
+            } else {
+                // User is authenticated, load Zendesk chat widget
+                loadZendeskChat();
             }
         });
 
@@ -24,50 +27,18 @@
                 window.location.href = "login.html"; // Redirect to login after logout
             });
         }
-    </script>
 
+        function loadZendeskChat() {
+            const script = document.createElement("script");
+            script.id = "ze-snippet";
+            script.src = "https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c";
+            document.body.appendChild(script);
+        }
+    </script>
 </head>
 <body style="background-color: white;">      
-<p> This is the Sandbox Test Page </p>
-    <!-- Start of acoustichelpcenter1735562051 Zendesk Widget script -->
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c"> </script>
-<!-- End of acoustichelpcenter1735562051 Zendesk Widget script -->
-<!-- <script>
-  zE("messenger", "loginUser",
-    function jwtCallback(callback) {
-      fetch("http://localhost:8080/api/get-jwt", {
-        method: "POST", 
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          external_id: "12345678",
-          email: "himmatacoustic@gmail.com",
-          email_verified: true,
-          name: "Himmat Kumar",
-          scope: "user"
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.jwt) {
-          callback(data.jwt);
-        } else {
-          console.error("JWT not found in response:", data);
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching JWT:", error);
-      });
-    },
-    function loginCallback(error) {
-      if (error) {
-        console.error("Login failed:", error);
-      }
-    }
-  );
-</script> -->
+    <p> This is the Sandbox Test Page </p>
+
     <h1>Welcome to the Protected Page</h1>
     <p>Only logged-in users can see this.</p>
     <button onclick="signOut()">Logout</button>
