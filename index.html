@@ -11,20 +11,35 @@
             apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
             authDomain: "protect-github.firebaseapp.com",
         };
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig());
 
         firebase.auth().onAuthStateChanged(user => {
-            if (!user) {
-                window.location.href = "login.html"; // Redirect to login page if not logged in
-            } else {
-                // User is authenticated, load Zendesk chat widget
+            if (user) {
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("protected-content").style.display = "block";
                 loadZendeskChat();
+            } else {
+                document.getElementById("login-section").style.display = "block";
+                document.getElementById("protected-content").style.display = "none";
             }
         });
 
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    // Reload page to show protected content
+                    window.location.reload();
+                })
+                .catch(error => {
+                    document.getElementById("error-message").innerText = error.message;
+                });
+        }
+
         function signOut() {
             firebase.auth().signOut().then(() => {
-                window.location.href = "login.html"; // Redirect to login after logout
+                window.location.reload();
             });
         }
 
@@ -36,11 +51,23 @@
         }
     </script>
 </head>
-<body style="background-color: white;">      
-    <p> This is the Sandbox Test Page </p>
+<body>
 
-    <h1>Welcome to the Protected Page</h1>
-    <p>Only logged-in users can see this.</p>
-    <button onclick="signOut()">Logout</button>
+    <!-- Login Form (Only Visible if NOT Authenticated) -->
+    <div id="login-section" style="display: none;">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="login()">Login</button>
+        <p id="error-message" style="color: red;"></p>
+    </div>
+
+    <!-- Protected Content (Only Visible if Authenticated) -->
+    <div id="protected-content" style="display: none;">
+        <h1>Welcome to the Protected Page</h1>
+        <p>Only logged-in users can see this.</p>
+        <button onclick="signOut()">Logout</button>
+    </div>
+
 </body>
 </html>
