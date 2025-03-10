@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Protected Page</title>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+   <!-- Firebase App (Always required) -->
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+
+<!-- Firebase Authentication -->
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
@@ -15,37 +19,37 @@
   messagingSenderId: "837309378267",
   appId: "1:837309378267:web:e15cd2440e3ce5c4aa26fe"
         };
-        firebase.initializeApp(firebaseConfig());
+        firebase.initializeApp(firebaseConfig);
 
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById("login-section").style.display = "none";
-                document.getElementById("protected-content").style.display = "block";
-                loadZendeskChat();
-            } else {
-                document.getElementById("login-section").style.display = "block";
-                document.getElementById("protected-content").style.display = "none";
-            }
-        });
+  firebase.auth().onAuthStateChanged(user => {
+    console.log("Auth state changed:", user);
+    if (user) {
+      document.getElementById("login-section").style.display = "none";
+      document.getElementById("protected-content").style.display = "block";
+    } else {
+      document.getElementById("login-section").style.display = "block";
+      document.getElementById("protected-content").style.display = "none";
+    }
+  });
 
-        function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    // Reload page to show protected content
-                    window.location.reload();
-                })
-                .catch(error => {
-                    document.getElementById("error-message").innerText = error.message;
-                });
-        }
+       function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-        function signOut() {
-            firebase.auth().signOut().then(() => {
-                window.location.reload();
-            });
-        }
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(userCredential => {
+        console.log("Login successful:", userCredential.user);
+      })
+      .catch(error => {
+        document.getElementById("error-message").innerText = error.message;
+      });
+  }
+
+  function signOut() {
+    firebase.auth().signOut().then(() => {
+      console.log("User signed out.");
+    });
+  }
 
         function loadZendeskChat() {
             const script = document.createElement("script");
