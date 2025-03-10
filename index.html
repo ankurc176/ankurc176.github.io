@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Page</title>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
+            authDomain: "protect-github.firebaseapp.com",
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        firebase.auth().onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "login.html"; // Redirect to login page if not logged in
+            }
+        });
+
+        function signOut() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = "login.html"; // Redirect to login after logout
+            });
+        }
+    </script>
 
 </head>
 <body style="background-color: white;">      
