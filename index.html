@@ -69,6 +69,41 @@
     });
   }
     </script>
+    <script>
+  zE("messenger", "loginUser",
+    function jwtCallback(callback) {
+      fetch("http://localhost:8080/api/get-jwt", { // ✅ Ensure correct backend URL
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          external_id: "12345678",
+          email: "himmatacousticr@gmail.com",
+          email_verified: true,
+          name: "Himmat Kumar"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.jwt) {
+          callback(data.jwt); // ✅ Pass the JWT to Zendesk
+        } else {
+          console.error("JWT not found in response:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching JWT:", error);
+      });
+    },
+    function loginCallback(error) {
+      if (error) {
+        console.error("Login failed:", error);
+      }
+    }
+  );
+</script>
 </head>
 <body>
 
