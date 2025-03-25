@@ -14,7 +14,7 @@
             apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
             authDomain: "protect-github.firebaseapp.com",
             projectId: "protect-github",
-            storageBucket: "protect-github.appspot.com", // ✅ Corrected Storage Bucket
+            storageBucket: "protect-github.appspot.com",
             messagingSenderId: "837309378267",
             appId: "1:837309378267:web:e15cd2440e3ce5c4aa26fe"
         };
@@ -32,47 +32,6 @@
             }
         }
 
-        // Authenticate user in Zendesk Messenger
-        function authenticateZendesk(user) {
-            if (window.zE) { // Ensure Zendesk is loaded
-                zE("messenger", "loginUser",
-                    function jwtCallback(callback) {
-                        fetch("http://localhost:8080/api/get-jwt", { // ✅ Use correct backend URL
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Accept": "application/json"
-                            },
-                            body: JSON.stringify({
-                                external_id: "himmat.kumar@acoustic.com" ,
-                                email: "himmat.kumar@acoustic.com",
-                                email_verified: true,
-                                name: "Himmat Kumar"
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.jwt) {
-                                callback(data.jwt); // ✅ Pass the JWT to Zendesk
-                            } else {
-                                console.error("JWT not found in response:", data);
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error fetching JWT:", error);
-                        });
-                    },
-                    function loginCallback(error) {
-                        if (error) {
-                            console.error("Login failed:", error);
-                        }
-                    }
-                );
-            } else {
-                console.error("Zendesk script not loaded yet.");
-            }
-        }
-
         // Listen for Firebase auth state changes
         firebase.auth().onAuthStateChanged(user => {
             console.log("Auth state changed:", user);
@@ -80,9 +39,8 @@
             if (user) {
                 document.getElementById("login-section").style.display = "none";
                 document.getElementById("protected-content").style.display = "block";
-                
+
                 loadZendeskChat(); // Load Zendesk Chat
-                setTimeout(() => authenticateZendesk(user), 3000); // Delay to ensure Zendesk is loaded
             } else {
                 document.getElementById("login-section").style.display = "block";
                 document.getElementById("protected-content").style.display = "none";
@@ -91,7 +49,7 @@
 
         // Handle Login
         function login(event) {
-            event.preventDefault(); // ✅ Prevent form reload
+            event.preventDefault(); // Prevent form reload
 
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
@@ -120,7 +78,7 @@
         <h2>Login</h2>
         <input type="email" id="email" placeholder="Enter Email">
         <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="login(event)">Login</button> <!-- ✅ Prevents refresh -->
+        <button onclick="login(event)">Login</button>
         <p id="error-message" style="color: red;"></p>
     </div>
 
