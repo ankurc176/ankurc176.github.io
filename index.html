@@ -79,9 +79,23 @@
         <p>This content is always visible.</p>
     </div>
     <script>
-    Smooch.init({ integrationId: '677f96a3ef02db05b7968693' }).then(function () {
+    Smooch.init({
+        integrationId: '677f96a3ef02db05b7968693',
+        configBaseUrl: 'https://acoustichelpcenter1735562051.zendesk.com/sc/',
+        fixedHeader: true,
+    }).then(
+        function() {
+            // Your code after init is complete
+        },
+        function(err) {
+            // Something went wrong during initialization
+        }
+    );
+</script>
+<!--     <script>
+    Smooch.init({ integrationId: '677f96a3ef02db05b7968693',  }).then(function () {
         // Your code after init is complete
     });
-</script>
+</script> -->
 </body>
 </html>
