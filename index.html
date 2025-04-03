@@ -29,6 +29,11 @@
                 script.id = "ze-snippet";
                 script.src = "https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c";
                 document.body.appendChild(script);
+                
+                script.onload = function () {
+                    window.zE('webWidget', 'open'); // Open chat widget when loaded
+                    window.zE('webWidget', 'chat:send', '👋 Welcome to Support! How can I help?');
+                };
             }
         }
 
@@ -70,8 +75,28 @@
             });
         }
     </script>
+
+    <style>
+        /* Fixed Chat Header */
+        #custom-chat-header {
+            position: fixed;
+            bottom: 100px; /* Adjust based on chat widget position */
+            right: 20px;
+            background-color: #0084ff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
 </head>
 <body>
+
+    <!-- Fixed Chat Header -->
+    <div id="custom-chat-header">💬 Chat with Support</div>
 
     <!-- Login Form (Only Visible if NOT Authenticated) -->
     <div id="login-section" style="display: none;">
