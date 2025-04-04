@@ -13,7 +13,7 @@
    Smooch.init({
     integrationId: '677f96a3ef02db05b7968693',
     customText: {
-        conversationListHeaderText: "📢 What's New? Click Here!"
+        conversationListHeaderText: "📢 What's New in Connect? Click Here!"
     }
 }).then(() => {
     console.log("Smooch initialized successfully.");
@@ -24,7 +24,7 @@
             let header = iframe.contentDocument.querySelector('.conversation-group-header');
             if (header) {
                 header.style.cursor = "pointer"; 
-                header.style.color = "#ff4081"; // Pinkish color for a modern feel
+                header.style.color = "#ffffff"; // White text for contrast
                 header.style.textDecoration = "none"; // Remove default underline
                 header.style.fontWeight = "bold";
                 header.style.fontSize = "16px";
@@ -33,20 +33,19 @@
                 header.style.justifyContent = "center";
                 header.style.padding = "10px";
                 header.style.borderRadius = "8px";
-                header.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)"; // Gradient background
+                header.style.background = "#56d71e"; // Your requested green color
+                header.style.transition = "all 0.3s ease-in-out"; // Smooth transition for hover effect
 
                 // Add hover effect
                 header.onmouseover = () => {
-                    header.style.color = "#fff";
-                    header.style.background = "linear-gradient(135deg, #ff758c, #ff7eb3)";
+                    header.style.background = "#4bb31a"; // Darker green on hover
                 };
                 header.onmouseout = () => {
-                    header.style.color = "#ff4081";
-                    header.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
+                    header.style.background = "#56d71e";
                 };
 
-                // Add a click event to redirect to Google
-                header.onclick = () => window.open("https://www.google.com", "_blank");
+                // Add a click event to redirect to your Acoustic Connect link
+                header.onclick = () => window.open("https://connect.goacoustic.com/hc/en-us/articles/17804578662169-What-s-new-in-Acoustic-Connect", "_blank");
 
                 console.log("Header styled successfully.");
             } else {
@@ -59,6 +58,7 @@
 }).catch(err => {
     console.error("Smooch initialization failed:", err);
 });
+
 
 
 </script>
