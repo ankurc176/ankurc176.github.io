@@ -14,7 +14,12 @@
     Smooch.init({
         integrationId: '677f96a3ef02db05b7968693',
         // configBaseUrl: 'https://acoustichelpcenter1735562051.zendesk.com/sc/',
-        fixedHeader: true
+        fixedHeader: true,
+        customText: {
+        headerText: 'How can we help?',
+        inputPlaceholder: 'Type a message...',
+        sendButtonText: 'Send'
+    }
     }).then(
         function() {
             // Your code after init is complete
@@ -24,6 +29,7 @@
         }
     );
 </script>
+    
 
 </body>
 </html>
