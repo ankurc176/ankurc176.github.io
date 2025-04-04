@@ -10,29 +10,20 @@
 </head>
 <body>
 
-    <!-- This is the container where the chat will be rendered -->
-    <div id="chat-container" style="width: 100%; height: 500px;"></div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Smooch.init({
-                integrationId: '677f96a3ef02db05b7968693',
-                fixedHeader: true,
-                embedded: true
-            }).then(() => {
-                console.log("Smooch initialized successfully.");
-                
-                const chatContainer = document.getElementById('chat-container');
-                if (chatContainer) {
-                    Smooch.render(chatContainer);
-                } else {
-                    console.error("Error: #chat-container element not found.");
-                }
-            }).catch(err => {
-                console.error("Smooch initialization failed:", err);
-            });
-        });
-    </script>
+   <script>
+    Smooch.init({
+        integrationId: '677f96a3ef02db05b7968693',
+        // configBaseUrl: 'https://acoustichelpcenter1735562051.zendesk.com/sc/',
+        fixedHeader: true
+    }).then(
+        function() {
+            // Your code after init is complete
+        },
+        function(err) {
+            // Something went wrong during initialization
+        }
+    );
+</script>
 
 </body>
 </html>
