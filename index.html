@@ -12,7 +12,6 @@
 <script>
    Smooch.init({
     integrationId: '677f96a3ef02db05b7968693',
-    fixedHeader: true,
     customText: {
         conversationListHeaderText: "📢 What's New in Connect? Click Here!"
     }
@@ -37,6 +36,13 @@
                 header.style.background = "#56d71e"; // Your requested green color
                 header.style.transition = "all 0.3s ease-in-out"; // Smooth transition for hover effect
 
+                // Make the header fixed at the top
+                header.style.position = "absolute";
+                header.style.top = "0";
+                header.style.left = "0";
+                header.style.width = "100%";
+                header.style.zIndex = "1000"; // Ensures it stays above other elements
+
                 // Add hover effect
                 header.onmouseover = () => {
                     header.style.background = "#4bb31a"; // Darker green on hover
@@ -48,7 +54,7 @@
                 // Add a click event to redirect to your Acoustic Connect link
                 header.onclick = () => window.open("https://connect.goacoustic.com/hc/en-us/articles/17804578662169-What-s-new-in-Acoustic-Connect", "_blank");
 
-                console.log("Header styled successfully.");
+                console.log("Fixed header styled successfully.");
             } else {
                 console.error("Header not found inside iframe.");
             }
@@ -59,8 +65,6 @@
 }).catch(err => {
     console.error("Smooch initialization failed:", err);
 });
-
-
 
 </script>
 
