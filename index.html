@@ -10,26 +10,32 @@
 </head>
 <body>
 
-   <script>
-    Smooch.init({
-        integrationId: '677f96a3ef02db05b7968693',
-        // configBaseUrl: 'https://acoustichelpcenter1735562051.zendesk.com/sc/',
-        fixedHeader: true,
-        customText: {
-        headerText: 'How can we help?',
-        inputPlaceholder: 'Type Here...',
-        sendButtonText: 'Send'
+   Smooch.init({
+    integrationId: '677f96a3ef02db05b7968693',
+    customText: {
+        conversationListHeaderText: "📢 What's New? Click Here!"
     }
-    }).then(
-        function() {
-            // Your code after init is complete
-        },
-        function(err) {
-            // Something went wrong during initialization
+}).then(() => {
+    console.log("Smooch initialized successfully.");
+
+    // Wait for the widget to load before modifying the header
+    setTimeout(() => {
+        let header = document.querySelector('.conversation-group-header');
+        if (header) {
+            header.style.cursor = "pointer"; // Make it look clickable
+            header.style.color = "#007bff"; // Blue color like a link
+            header.style.textDecoration = "underline";
+
+            // Add a click event to redirect to Google
+            header.onclick = () => window.open("https://www.google.com", "_blank");
+        } else {
+            console.error("Header not found!");
         }
-    );
-</script>
-    
+    }, 1000); // Small delay to ensure the widget loads
+}).catch(err => {
+    console.error("Smooch initialization failed:", err);
+});
+
 
 </body>
 </html>
