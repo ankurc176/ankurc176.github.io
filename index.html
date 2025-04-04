@@ -18,23 +18,31 @@
 }).then(() => {
     console.log("Smooch initialized successfully.");
 
-    // Wait for the widget to load before modifying the header
+    // Wait longer for the widget to load properly
     setTimeout(() => {
-        let header = document.querySelector('.conversation-group-header');
-        if (header) {
-            header.style.cursor = "pointer"; // Make it look clickable
-            header.style.color = "#007bff"; // Blue color like a link
-            header.style.textDecoration = "underline";
+        let iframe = document.querySelector('iframe');
+        if (iframe && iframe.contentDocument) {
+            let header = iframe.contentDocument.querySelector('.conversation-group-header');
+            if (header) {
+                header.style.cursor = "pointer"; // Make it look clickable
+                header.style.color = "#007bff"; // Blue color like a link
+                header.style.textDecoration = "underline";
 
-            // Add a click event to redirect to Google
-            header.onclick = () => window.open("https://www.google.com", "_blank");
+                // Add a click event to redirect to Google
+                header.onclick = () => window.open("https://www.google.com", "_blank");
+
+                console.log("Header modified successfully.");
+            } else {
+                console.error("Header not found inside iframe.");
+            }
         } else {
-            console.error("Header not found!");
+            console.error("Iframe not found or not accessible.");
         }
-    }, 1000); // Small delay to ensure the widget loads
+    }, 3000); // Increased timeout to 3 seconds
 }).catch(err => {
     console.error("Smooch initialization failed:", err);
 });
+
 </script>
 
 </body>
