@@ -18,30 +18,48 @@
 }).then(() => {
     console.log("Smooch initialized successfully.");
 
-    // Wait longer for the widget to load properly
     setTimeout(() => {
         let iframe = document.querySelector('iframe');
         if (iframe && iframe.contentDocument) {
             let header = iframe.contentDocument.querySelector('.conversation-group-header');
             if (header) {
-                header.style.cursor = "pointer"; // Make it look clickable
-                header.style.color = "#007bff"; // Blue color like a link
-                header.style.textDecoration = "underline";
+                header.style.cursor = "pointer"; 
+                header.style.color = "#ff4081"; // Pinkish color for a modern feel
+                header.style.textDecoration = "none"; // Remove default underline
+                header.style.fontWeight = "bold";
+                header.style.fontSize = "16px";
+                header.style.display = "flex";
+                header.style.alignItems = "center";
+                header.style.justifyContent = "center";
+                header.style.padding = "10px";
+                header.style.borderRadius = "8px";
+                header.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)"; // Gradient background
+
+                // Add hover effect
+                header.onmouseover = () => {
+                    header.style.color = "#fff";
+                    header.style.background = "linear-gradient(135deg, #ff758c, #ff7eb3)";
+                };
+                header.onmouseout = () => {
+                    header.style.color = "#ff4081";
+                    header.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
+                };
 
                 // Add a click event to redirect to Google
                 header.onclick = () => window.open("https://www.google.com", "_blank");
 
-                console.log("Header modified successfully.");
+                console.log("Header styled successfully.");
             } else {
                 console.error("Header not found inside iframe.");
             }
         } else {
             console.error("Iframe not found or not accessible.");
         }
-    }, 3000); // Increased timeout to 3 seconds
+    }, 3000);
 }).catch(err => {
     console.error("Smooch initialization failed:", err);
 });
+
 
 </script>
 
