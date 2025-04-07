@@ -91,75 +91,52 @@ Smooch.init({
 </script>
 
 <script>
-// Smooch.on("widget:opened", () => {
-//     console.log("Widget opened. Waiting for iframe...");
-
-//     const iframePoll = setInterval(() => {
-//         const iframe = document.querySelector("iframe");
-
-//         if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === "complete") {
-//             clearInterval(iframePoll);
-
-//             const observer = new MutationObserver(() => {
-//                 const button = iframe.contentDocument.querySelector(".conversation-group-footer");
-//                 if (button && !button.classList.contains("bound")) {
-//                     button.classList.add("bound");
-//                     button.addEventListener("click", () => {
-//                         console.log("New Conversation button clicked!");
-// Smooch.createConversation()
-//   .then((conversation) => {
-//     console.log("New conversation created:", conversation);
-
-//     // Trigger UI refresh by sending a welcome message
-//     return Smooch.sendMessage({
-//       type: 'text',
-//       role: 'appMaker',
-//       text: '👋 Welcome! How can we help you today?'
-//     });
-//   })
-//   .then(() => {
-//     console.log("Welcome message sent.");
-//   })
-//   .catch((err) => {
-//     console.error("Error during conversation creation or message sending:", err);
-//   });
-
-//                     });
-//                     console.log("Button listener attached.");
-//                 }
-//             });
-
-//             observer.observe(iframe.contentDocument.body, {
-//                 childList: true,
-//                 subtree: true
-//             });
-
-//             console.log("MutationObserver set up inside iframe.");
-//         }
-//     }, 500);
-// });
 Smooch.on("widget:opened", () => {
-    // Wait for the widget to open and the DOM to be ready
-    const observer = new MutationObserver(() => {
-        const button = document.querySelector('.conversation-group-footer bound');
-        
-        if (button) {
-            // Make sure to only attach the event once
-            button.addEventListener('click', () => {
-                Smooch.createConversation({}).then((conversation) => {
-                    console.log('New conversation created:', conversation);
-                });
+    console.log("Widget opened. Waiting for iframe...");
+
+    const iframePoll = setInterval(() => {
+        const iframe = document.querySelector("iframe");
+
+        if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === "complete") {
+            clearInterval(iframePoll);
+
+            const observer = new MutationObserver(() => {
+                const button = iframe.contentDocument.querySelector(".conversation-group-footer");
+                if (button && !button.classList.contains("bound")) {
+                    button.classList.add("bound");
+                    button.addEventListener("click", () => {
+                        console.log("New Conversation button clicked!");
+Smooch.createConversation()
+  .then((conversation) => {
+    console.log("New conversation created:", conversation);
+
+    // Trigger UI refresh by sending a welcome message
+    return Smooch.sendMessage({
+      type: 'text',
+      role: 'appMaker',
+      text: '👋 Welcome! How can we help you today?'
+    });
+  })
+  .then(() => {
+    console.log("Welcome message sent.");
+  })
+  .catch((err) => {
+    console.error("Error during conversation creation or message sending:", err);
+  });
+
+                    });
+                    console.log("Button listener attached.");
+                }
             });
 
-            // Stop observing once we found and bound the button
-            observer.disconnect();
-        }
-    });
+            observer.observe(iframe.contentDocument.body, {
+                childList: true,
+                subtree: true
+            });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
+            console.log("MutationObserver set up inside iframe.");
+        }
+    }, 500);
 });
 
 </script>
