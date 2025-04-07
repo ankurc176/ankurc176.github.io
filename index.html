@@ -10,7 +10,7 @@
 </head>
 <body>
 <script>
-   Smooch.init({
+  Smooch.init({
     integrationId: '677f96a3ef02db05b7968693',
     fixedHeader: true,
     customText: {
@@ -19,46 +19,65 @@
 }).then(() => {
     console.log("Smooch initialized successfully.");
 
-    setTimeout(() => {
-        let iframe = document.querySelector('iframe');
-        if (iframe && iframe.contentDocument) {
-            let header = iframe.contentDocument.querySelector('.conversation-group-header');
-            if (header) {
-                header.style.cursor = "pointer"; 
-                header.style.color = "#ffffff"; // White text for contrast
-                header.style.textDecoration = "none"; // Remove default underline
-                header.style.fontWeight = "bold";
-                header.style.fontSize = "16px";
-                header.style.display = "flex";
-                header.style.alignItems = "center";
-                header.style.justifyContent = "center";
-                header.style.padding = "10px";
-                header.style.borderRadius = "8px";
-                header.style.background = "#56d71e"; // Your requested green color
-                header.style.transition = "all 0.3s ease-in-out"; // Smooth transition for hover effect
+    // Poll for iframe readiness
+    const observerInterval = setInterval(() => {
+        const iframe = document.querySelector('iframe');
+        if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+            clearInterval(observerInterval);
 
-                // Add hover effect
-                header.onmouseover = () => {
-                    header.style.background = "#4bb31a"; // Darker green on hover
-                };
-                header.onmouseout = () => {
-                    header.style.background = "#56d71e";
-                };
+            const observer = new MutationObserver(() => {
+                const header = iframe.contentDocument.querySelector('.conversation-group-header');
+                if (header && !header.classList.contains('customized')) {
+                    styleHeader(header);
+                    header.classList.add('customized'); // Prevent restyling
+                }
+            });
 
-                // Add a click event to redirect to your Acoustic Connect link
-                header.onclick = () => window.open("https://connect.goacoustic.com/hc/en-us/articles/17804578662169-What-s-new-in-Acoustic-Connect", "_blank");
+            observer.observe(iframe.contentDocument.body, {
+                childList: true,
+                subtree: true
+            });
 
-                console.log("Header styled successfully.");
-            } else {
-                console.error("Header not found inside iframe.");
-            }
-        } else {
-            console.error("Iframe not found or not accessible.");
+            console.log("MutationObserver set up for header.");
         }
-    }, 3000);
+    }, 500);
 }).catch(err => {
     console.error("Smooch initialization failed:", err);
 });
+
+function styleHeader(header) {
+    header.style.cursor = "pointer";
+    header.style.color = "#ffffff";
+    header.style.textDecoration = "none";
+    header.style.fontWeight = "bold";
+    header.style.fontSize = "16px";
+    header.style.display = "flex";
+    header.style.alignItems = "center";
+    header.style.justifyContent = "center";
+    header.style.padding = "10px";
+    header.style.borderRadius = "8px";
+    header.style.background = "#56d71e";
+    header.style.transition = "all 0.3s ease-in-out";
+
+    // Hover effect
+    header.onmouseover = () => {
+        header.style.background = "#4bb31a";
+    };
+    header.onmouseout = () => {
+        header.style.background = "#56d71e";
+    };
+
+    // Redirect on click
+    header.onclick = () => {
+        window.open(
+            "https://connect.goacoustic.com/hc/en-us/articles/17804578662169-What-s-new-in-Acoustic-Connect",
+            "_blank"
+        );
+    };
+
+    console.log("Header styled (via MutationObserver).");
+}
+
 
 </script>
 
