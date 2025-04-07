@@ -133,50 +133,61 @@ Smooch.createConversation()
   window.Smooch.on('widget:opened', () => {
     console.log('Smooch widget opened');
 
-    const footerDiv = document.querySelector('.conversation-group-footer button');
+    // Try finding the div every 200ms, up to 10 times
+    let attempts = 0;
+    const maxAttempts = 10;
 
-    if (!footerDiv) {
-      console.warn('No element found with .conversation-group-footer');
-      return;
-    }
+    const intervalId = setInterval(() => {
+      const footerDiv = document.querySelector('.conversation-group-footer');
 
-    console.log('Found .conversation-group-footer, attaching click listener...');
+      if (footerDiv) {
+        console.log('Found .conversation-group-footer, attaching click listener...');
 
-    footerDiv.addEventListener('click', async function (event) {
-      console.log('Click detected inside .conversation-group-footer:', event.target);
+        footerDiv.addEventListener('click', async function (event) {
+          console.log('Click detected inside .conversation-group-footer:', event.target);
 
-      if (event.target.tagName.toLowerCase() === 'button') {
-        console.log('Button clicked. Attempting to create conversation...');
+          if (event.target.tagName.toLowerCase() === 'button') {
+            console.log('Button clicked. Attempting to create conversation...');
 
-        try {
-          const conversation = await window.Smooch.createConversation();
-          console.log('Conversation created:', conversation);
+            try {
+              const conversation = await window.Smooch.createConversation();
+              console.log('Conversation created:', conversation);
 
-          if (
-            window.Smooch?.loadConversation &&
-            conversation?.id &&
-            window.Smooch.getConversations().length > 1
-          ) {
-            console.log('Loading conversation with ID:', conversation.id);
-            await window.Smooch.loadConversation(conversation.id);
+              if (
+                window.Smooch?.loadConversation &&
+                conversation?.id &&
+                window.Smooch.getConversations().length > 1
+              ) {
+                console.log('Loading conversation with ID:', conversation.id);
+                await window.Smooch.loadConversation(conversation.id);
 
-            if (window.getLoadingState?.()) {
-              console.log('Loading state is active, showing indicator...');
-              window.showLoadingIndicator?.(true, 'conversation');
+                if (window.getLoadingState?.()) {
+                  console.log('Loading state is active, showing indicator...');
+                  window.showLoadingIndicator?.(true, 'conversation');
+                }
+              }
+            } catch (e) {
+              console.error('Failed to create conversation:', e);
+              window.widgetEvent?.('error');
+              window.error?.('Failed to create conversation.', {
+                error: e.toString(),
+                stack: e.stack
+              });
             }
+          } else {
+            console.log('Clicked element is not a button, ignoring.');
           }
-        } catch (e) {
-          console.error('Failed to create conversation:', e);
-          window.widgetEvent?.('error');
-          window.error?.('Failed to create conversation.', {
-            error: e.toString(),
-            stack: e.stack
-          });
-        }
+        });
+
+        clearInterval(intervalId); // Stop polling once it's found
       } else {
-        console.log('Clicked element is not a button, ignoring.');
+        attempts++;
+        if (attempts >= maxAttempts) {
+          clearInterval(intervalId);
+          console.warn('Could not find .conversation-group-footer after waiting.');
+        }
       }
-    });
+    }, 200); // Poll every 200ms
   });
 </script>
 
