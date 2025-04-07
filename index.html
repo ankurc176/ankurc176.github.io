@@ -18,7 +18,6 @@
 }).then(() => {
     console.log("Smooch initialized successfully.");
 
-    Poll for iframe readiness
     const observerInterval = setInterval(() => {
         const iframe = document.querySelector('iframe');
         if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
