@@ -10,13 +10,13 @@
 </head>
 <body>
 <script>
-  Smooch.init({
-    integrationId: '677f96a3ef02db05b7968693',
-    customText: {
-        conversationListHeaderText: "📢 What's New in Connect? Click Here!"
-    }
-}).then(() => {
-    console.log("Smooch initialized successfully.");
+//   Smooch.init({
+//     integrationId: '677f96a3ef02db05b7968693',
+//     customText: {
+//         conversationListHeaderText: "📢 What's New in Connect? Click Here!"
+//     }
+// }).then(() => {
+//     console.log("Smooch initialized successfully.");
 
     // Poll for iframe readiness
 //     const observerInterval = setInterval(() => {
@@ -75,7 +75,19 @@
 //     };
 
 //     console.log("Header styled (via MutationObserver).");
-}
+//}
+
+Smooch.init({
+    integrationId: '677f96a3ef02db05b7968693',
+    customText: {
+        conversationListHeaderText: "📢 What's New in Connect? Click Here!"
+    }
+}).then(() => {
+    console.log("Smooch initialized successfully.");
+}).catch((error) => {
+    console.error("Smooch initialization failed:", error);
+});
+
 </script>
 
 <script>
