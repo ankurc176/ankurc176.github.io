@@ -131,66 +131,74 @@ Smooch.createConversation()
 
 <script>
   window.Smooch.on('widget:opened', () => {
-    console.log('Smooch widget opened');
+    console.log('Smooch widget opened — looking for iframe...');
 
-    // Try finding the div every 200ms, up to 10 times
-    let attempts = 0;
-    const maxAttempts = 10;
+    const iframePoller = setInterval(() => {
+      const iframe = document.querySelector('iframe');
 
-    const intervalId = setInterval(() => {
-      const footerDiv = document.querySelector('.conversation-group-footer');
+      if (!iframe) {
+        console.log('Still waiting for iframe...');
+        return;
+      }
 
-      if (footerDiv) {
-        console.log('Found .conversation-group-footer, attaching click listener...');
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
 
-        footerDiv.addEventListener('click', async function (event) {
-          console.log('Click detected inside .conversation-group-footer:', event.target);
+      if (!iframeDoc || iframeDoc.readyState !== 'complete') {
+        console.log('Iframe document not ready yet...');
+        return;
+      }
 
-          if (event.target.tagName.toLowerCase() === 'button') {
-            console.log('Button clicked. Attempting to create conversation...');
+      console.log('✅ Iframe ready, setting up MutationObserver...');
+
+      const observer = new MutationObserver(() => {
+        const button = iframeDoc.querySelector('.conversation-group-footer button');
+
+        if (button && !button.classList.contains('bound')) {
+          console.log('✅ Found New Conversation button inside iframe');
+          
+          button.classList.add('bound');
+          button.addEventListener('click', async () => {
+            console.log('🟢 New Conversation button clicked! Creating conversation...');
 
             try {
               const conversation = await window.Smooch.createConversation();
-              console.log('Conversation created:', conversation);
+              console.log('✅ Conversation created:', conversation);
 
               if (
                 window.Smooch?.loadConversation &&
                 conversation?.id &&
                 window.Smooch.getConversations().length > 1
               ) {
-                console.log('Loading conversation with ID:', conversation.id);
                 await window.Smooch.loadConversation(conversation.id);
 
                 if (window.getLoadingState?.()) {
-                  console.log('Loading state is active, showing indicator...');
                   window.showLoadingIndicator?.(true, 'conversation');
                 }
               }
             } catch (e) {
-              console.error('Failed to create conversation:', e);
+              console.error('❌ Failed to create conversation:', e);
               window.widgetEvent?.('error');
-              window.error?.('Failed to create conversation.', {
+              window.error?.('Conversation creation failed.', {
                 error: e.toString(),
                 stack: e.stack
               });
             }
-          } else {
-            console.log('Clicked element is not a button, ignoring.');
-          }
-        });
+          });
 
-        clearInterval(intervalId); // Stop polling once it's found
-      } else {
-        attempts++;
-        if (attempts >= maxAttempts) {
-          clearInterval(intervalId);
-          console.warn('Could not find .conversation-group-footer after waiting.');
+          // Stop observing once it's bound
+          observer.disconnect();
         }
-      }
-    }, 200); // Poll every 200ms
+      });
+
+      observer.observe(iframeDoc.body, {
+        childList: true,
+        subtree: true
+      });
+
+      clearInterval(iframePoller); // Done!
+    }, 300);
   });
 </script>
-
 
 
 </body>
