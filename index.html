@@ -129,87 +129,41 @@ Smooch.createConversation()
 
 </script> -->
 
-    <script>
-  (function () {
-    let conversationsCountOnWidgetLoad = 0;
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const footerDiv = document.querySelector('.conversation-group-footer');
 
-    function getConversationsCountOnWidgetLoad() {
-      return conversationsCountOnWidgetLoad;
-    }
+    if (footerDiv) {
+      footerDiv.addEventListener('click', async function (event) {
+        // Optional: only trigger if the clicked element is a button
+        if (event.target.tagName.toLowerCase() === 'button') {
+          try {
+            const conversation = await window.Smooch.createConversation();
 
-    function setConversationsCountOnWidgetLoad(currentCount) {
-      conversationsCountOnWidgetLoad = currentCount;
-    }
+            if (
+              window.Smooch?.loadConversation &&
+              conversation?.id &&
+              window.Smooch.getConversations().length > 1
+            ) {
+              await window.Smooch.loadConversation(conversation.id);
 
-    function shouldCreateConversation() {
-      return window.Smooch.getConversations().length === 0;
-    }
-
-    async function createConversation({
-      inProduct = false,
-      inShoppingCart = false,
-      locale,
-      openWidgetToNewConversation = false,
-      specificIntent = null,
-      widgetInputs = {}
-    } = {}) {
-      try {
-        const widgetInitialOptions = window.Z2SunCoWidget?.initialOptions || {};
-
-        let conversationLocale = locale || widgetInitialOptions.locale || window.checkForLocale();
-        let conversationIntent = specificIntent || widgetInitialOptions.specificIntent || null;
-
-        const inputs = {
-          widgetInput1: null,
-          widgetInput2: null,
-          widgetInput3: null,
-          widgetInput4: null,
-          widgetInput5: null,
-          ...widgetInitialOptions.widgetInputs,
-          ...widgetInputs
-        };
-
-        setConversationsCountOnWidgetLoad(window.Smooch.getConversations().length);
-
-        const conversation = await window.Smooch.createConversation({
-          metadata: window.getConversationMetadata(
-            inProduct,
-            inShoppingCart,
-            conversationLocale,
-            openWidgetToNewConversation,
-            conversationIntent,
-            inputs
-          )
-        });
-
-        if (
-          window.Smooch?.loadConversation &&
-          conversation?.id &&
-          window.Smooch.getConversations().length > 1
-        ) {
-          await window.Smooch.loadConversation(conversation.id);
-
-          if (window.getLoadingState()) {
-            window.showLoadingIndicator(true, 'conversation');
+              if (window.getLoadingState?.()) {
+                window.showLoadingIndicator?.(true, 'conversation');
+              }
+            }
+          } catch (e) {
+            window.widgetEvent?.('error');
+            window.error?.('Failed to create conversation.', {
+              error: e.toString(),
+              stack: e.stack
+            });
           }
         }
-      } catch (e) {
-        window.widgetEvent('error');
-        window.error('Failed to create conversation.', {
-          error: e.toString(),
-          stack: e.stack
-        });
-      }
+      });
     }
-
-    // 🔁 Listen for widget open and trigger conversation logic
-    window.Smooch.on('widget:opened', async () => {
-      if (shouldCreateConversation()) {
-        await createConversation();
-      }
-    });
-  })();
+  });
 </script>
+
 
 
 </body>
