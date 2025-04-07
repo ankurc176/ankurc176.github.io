@@ -131,36 +131,53 @@ Smooch.createConversation()
 
  <script>
   document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM fully loaded');
+
     const footerDiv = document.querySelector('.conversation-group-footer');
 
-    if (footerDiv) {
-      footerDiv.addEventListener('click', async function (event) {
-        // Optional: only trigger if the clicked element is a button
-        if (event.target.tagName.toLowerCase() === 'button') {
-          try {
-            const conversation = await window.Smooch.createConversation();
-
-            if (
-              window.Smooch?.loadConversation &&
-              conversation?.id &&
-              window.Smooch.getConversations().length > 1
-            ) {
-              await window.Smooch.loadConversation(conversation.id);
-
-              if (window.getLoadingState?.()) {
-                window.showLoadingIndicator?.(true, 'conversation');
-              }
-            }
-          } catch (e) {
-            window.widgetEvent?.('error');
-            window.error?.('Failed to create conversation.', {
-              error: e.toString(),
-              stack: e.stack
-            });
-          }
-        }
-      });
+    if (!footerDiv) {
+      console.warn('No element found with .conversation-group-footer');
+      return;
     }
+
+    console.log('Found .conversation-group-footer, attaching click listener...');
+
+    footerDiv.addEventListener('click', async function (event) {
+      console.log('Click detected inside .conversation-group-footer:', event.target);
+
+      // Optional: restrict to button clicks
+      if (event.target.tagName.toLowerCase() === 'button') {
+        console.log('Button clicked. Attempting to create conversation...');
+
+        try {
+          const conversation = await window.Smooch.createConversation();
+          console.log('Conversation created:', conversation);
+
+          if (
+            window.Smooch?.loadConversation &&
+            conversation?.id &&
+            window.Smooch.getConversations().length > 1
+          ) {
+            console.log('Loading conversation with ID:', conversation.id);
+            await window.Smooch.loadConversation(conversation.id);
+
+            if (window.getLoadingState?.()) {
+              console.log('Loading state is active, showing indicator...');
+              window.showLoadingIndicator?.(true, 'conversation');
+            }
+          }
+        } catch (e) {
+          console.error('Failed to create conversation:', e);
+          window.widgetEvent?.('error');
+          window.error?.('Failed to create conversation.', {
+            error: e.toString(),
+            stack: e.stack
+          });
+        }
+      } else {
+        console.log('Clicked element is not a button, ignoring.');
+      }
+    });
   });
 </script>
 
