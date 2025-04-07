@@ -79,17 +79,47 @@ function styleHeader(header) {
 }
 
 
+<script>
+Smooch.on("widget:opened", () => {
+    console.log("Widget opened. Waiting for iframe...");
+
+    // Poll for iframe until it's loaded
+    const iframePoll = setInterval(() => {
+        const iframe = document.querySelector("iframe");
+
+        if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === "complete") {
+            clearInterval(iframePoll);
+
+            // Set up MutationObserver to watch for footer with the button
+            const observer = new MutationObserver(() => {
+                const button = iframe.contentDocument.querySelector(".conversation-group-footer");
+                if (button && !button.classList.contains("bound")) {
+                    button.classList.add("bound");
+                    button.addEventListener("click", () => {
+                        console.log("New Conversation button clicked!");
+                        Smooch.createConversation()
+                            .then((conversation) => {
+                                console.log("New conversation created:", conversation);
+                            })
+                            .catch((err) => {
+                                console.error("Failed to create conversation:", err);
+                            });
+                    });
+                    console.log("Button listener attached.");
+                }
+            });
+
+            observer.observe(iframe.contentDocument.body, {
+                childList: true,
+                subtree: true
+            });
+
+            console.log("MutationObserver set up inside iframe.");
+        }
+    }, 500);
+});
 </script>
 
-    <script>
-    Smooch.on("widget:opened", () => {
-        Smooch.createConversation({
-        }).then((conversation) => {
-            // Your code after receiving the current user's new conversation
-            console.log(conversation);
-        });
-    });
-</script>
 
 </body>
 </html>
