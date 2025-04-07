@@ -132,8 +132,9 @@ Smooch.createConversation()
  <script>
   document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM fully loaded');
-
-    const footerDiv = document.querySelector('.conversation-group-footer button');
+    console.log('starting');
+    const footerDiv = document.querySelector('.conversation-group-footer');
+    console.log(footerDiv);
 
     if (!footerDiv) {
       console.warn('No element found with .conversation-group-footer');
