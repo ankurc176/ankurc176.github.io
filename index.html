@@ -133,7 +133,7 @@ Smooch.createConversation()
   window.Smooch.on('widget:opened', () => {
     console.log('Smooch widget opened');
 
-    const footerDiv = document.querySelector('.conversation-group-footer');
+    const footerDiv = document.querySelector('.conversation-group-footer button');
 
     if (!footerDiv) {
       console.warn('No element found with .conversation-group-footer');
