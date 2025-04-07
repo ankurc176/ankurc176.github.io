@@ -81,5 +81,15 @@ function styleHeader(header) {
 
 </script>
 
+    <script>
+    Smooch.on("widget:opened", () => {
+        Smooch.createConversation({
+        }).then((conversation) => {
+            // Your code after receiving the current user's new conversation
+            console.log(conversation);
+        });
+    });
+</script>
+
 </body>
 </html>
