@@ -12,7 +12,6 @@
 <script>
   Smooch.init({
     integrationId: '677f96a3ef02db05b7968693',
-    fixedHeader: true,
     customText: {
         conversationListHeaderText: "📢 What's New in Connect? Click Here!"
     }
@@ -95,16 +94,24 @@ Smooch.on("widget:opened", () => {
                     button.classList.add("bound");
                     button.addEventListener("click", () => {
                         console.log("New Conversation button clicked!");
-                        Smooch.createConversation()
-                            .then((conversation) => {
-                                console.log("New conversation created:", conversation);
+Smooch.createConversation()
+  .then((conversation) => {
+    console.log("New conversation created:", conversation);
 
-                                // 🔥 Fix: Activate the new conversation in UI
-                                Smooch.setActiveConversation(conversation.id);
-                            })
-                            .catch((err) => {
-                                console.error("Failed to create conversation:", err);
-                            });
+    // Trigger UI refresh by sending a welcome message
+    return Smooch.sendMessage({
+      type: 'text',
+      role: 'appMaker',
+      text: '👋 Welcome! How can we help you today?'
+    });
+  })
+  .then(() => {
+    console.log("Welcome message sent.");
+  })
+  .catch((err) => {
+    console.error("Error during conversation creation or message sending:", err);
+  });
+
                     });
                     console.log("Button listener attached.");
                 }
