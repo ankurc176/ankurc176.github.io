@@ -78,7 +78,7 @@ function styleHeader(header) {
     
 </script>
 
-<script>
+<!-- <script>
 Smooch.on("widget:opened", () => {
     console.log("Widget opened. Waiting for iframe...");
 
@@ -127,6 +127,88 @@ Smooch.createConversation()
     }, 500);
 });
 
+</script> -->
+
+    <script>
+  (function () {
+    let conversationsCountOnWidgetLoad = 0;
+
+    function getConversationsCountOnWidgetLoad() {
+      return conversationsCountOnWidgetLoad;
+    }
+
+    function setConversationsCountOnWidgetLoad(currentCount) {
+      conversationsCountOnWidgetLoad = currentCount;
+    }
+
+    function shouldCreateConversation() {
+      return window.Smooch.getConversations().length === 0;
+    }
+
+    async function createConversation({
+      inProduct = false,
+      inShoppingCart = false,
+      locale,
+      openWidgetToNewConversation = false,
+      specificIntent = null,
+      widgetInputs = {}
+    } = {}) {
+      try {
+        const widgetInitialOptions = window.Z2SunCoWidget?.initialOptions || {};
+
+        let conversationLocale = locale || widgetInitialOptions.locale || window.checkForLocale();
+        let conversationIntent = specificIntent || widgetInitialOptions.specificIntent || null;
+
+        const inputs = {
+          widgetInput1: null,
+          widgetInput2: null,
+          widgetInput3: null,
+          widgetInput4: null,
+          widgetInput5: null,
+          ...widgetInitialOptions.widgetInputs,
+          ...widgetInputs
+        };
+
+        setConversationsCountOnWidgetLoad(window.Smooch.getConversations().length);
+
+        const conversation = await window.Smooch.createConversation({
+          metadata: window.getConversationMetadata(
+            inProduct,
+            inShoppingCart,
+            conversationLocale,
+            openWidgetToNewConversation,
+            conversationIntent,
+            inputs
+          )
+        });
+
+        if (
+          window.Smooch?.loadConversation &&
+          conversation?.id &&
+          window.Smooch.getConversations().length > 1
+        ) {
+          await window.Smooch.loadConversation(conversation.id);
+
+          if (window.getLoadingState()) {
+            window.showLoadingIndicator(true, 'conversation');
+          }
+        }
+      } catch (e) {
+        window.widgetEvent('error');
+        window.error('Failed to create conversation.', {
+          error: e.toString(),
+          stack: e.stack
+        });
+      }
+    }
+
+    // 🔁 Listen for widget open and trigger conversation logic
+    window.Smooch.on('widget:opened', async () => {
+      if (shouldCreateConversation()) {
+        await createConversation();
+      }
+    });
+  })();
 </script>
 
 
