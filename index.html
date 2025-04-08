@@ -131,38 +131,52 @@ Smooch.createConversation()
 
 <script>
   window.Smooch.on('widget:opened', () => {
-    console.log('Smooch widget opened — looking for iframe...');
+  console.log('Smooch widget opened — looking for iframe...');
 
-    const iframePoller = setInterval(() => {
-      const iframe = document.querySelector('iframe');
+  const iframePoller = setInterval(() => {
+    const iframe = document.querySelector('iframe');
 
-      if (!iframe) {
-        console.log('Still waiting for iframe...');
-        return;
-      }
+    if (!iframe) return;
 
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!iframeDoc || iframeDoc.readyState !== 'complete') return;
 
-      if (!iframeDoc || iframeDoc.readyState !== 'complete') {
-        console.log('Iframe document not ready yet...');
-        return;
-      }
+    console.log('Iframe ready, starting persistent MutationObserver...');
 
-      console.log('✅ Iframe ready, setting up MutationObserver...');
+    const observer = new MutationObserver(() => {
+      const buttons = iframeDoc.querySelectorAll('.conversation-group-footer button');
 
-      const observer = new MutationObserver(() => {
-        const button = iframeDoc.querySelector('.conversation-group-footer button');
-
-        if (button && !button.classList.contains('bound')) {
-          console.log('✅ Found New Conversation button inside iframe');
-          
+      buttons.forEach((button) => {
+        if (!button.classList.contains('bound')) {
+          console.log('🔗 Binding click to new conversation button...');
           button.classList.add('bound');
+
           button.addEventListener('click', async () => {
-            console.log('🟢 New Conversation button clicked! Creating conversation...');
+            console.log('Button clicked! Starting typing indicator and creating conversation...');
 
             try {
+              // Start typing indicator
+              window.Smooch.startTyping();
+              
+              // Build metadata
+              const metadata = {};
+              if (window.HelpCenter?.user?.email) {
+                metadata.zendesk_ticket_field_38730792628121 = window.HelpCenter.user.email;
+                console.log('Email metadata set:', metadata.zendesk_ticket_field_38730792628121);
+              } else {
+                console.warn('HelpCenter.user.email not available, skipping metadata.');
+              }
+
+              // Create conversation with metadata
+              // const conversation = await window.Smooch.createConversation({ metadata });
+              // console.log('Conversation created:', conversation);
+
+              // // Create conversation
               const conversation = await window.Smooch.createConversation();
-              console.log('✅ Conversation created:', conversation);
+              console.log('Conversation created:', conversation);
+
+              // Stop typing indicator
+              window.Smooch.stopTyping();
 
               if (
                 window.Smooch?.loadConversation &&
@@ -170,34 +184,35 @@ Smooch.createConversation()
                 window.Smooch.getConversations().length > 1
               ) {
                 await window.Smooch.loadConversation(conversation.id);
-
                 if (window.getLoadingState?.()) {
                   window.showLoadingIndicator?.(true, 'conversation');
                 }
               }
             } catch (e) {
-              console.error('❌ Failed to create conversation:', e);
+              // Stop typing even on error
+              window.Smooch.stopTyping();
+
+              console.error('Error creating conversation:', e);
               window.widgetEvent?.('error');
               window.error?.('Conversation creation failed.', {
                 error: e.toString(),
-                stack: e.stack
+                stack: e.stack,
               });
             }
           });
-
-          // Stop observing once it's bound
-          observer.disconnect();
         }
       });
+    });
 
-      observer.observe(iframeDoc.body, {
-        childList: true,
-        subtree: true
-      });
+    observer.observe(iframeDoc.body, {
+      childList: true,
+      subtree: true,
+    });
 
-      clearInterval(iframePoller); // Done!
-    }, 300);
-  });
+    clearInterval(iframePoller);
+  }, 300);
+});
+
 </script>
 
 
