@@ -3,218 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Chat</title>
+    <title>Protected Page</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+
     <script>
-    !function(o,d,s,e,f){var i,a,p,c=[],h=[];function t(){var t="You must provide a supported major version.";try{if(!f)throw new Error(t);var e,n="https://cdn.smooch.io/",r="smooch";e="string"==typeof this.response?JSON.parse(this.response):this.response;var o=f.match(/([0-9]+)\.?([0-9]+)?\.?([0-9]+)?/),s=o&&o[1],i=o&&o[2],a=o&&o[3],p=e["v"+s],c=e["v"+s+"."+i+".patch"];if(e.url||p||c){var h=d.getElementsByTagName("script")[0],u=d.createElement("script");if(u.async=!0,a)u.src=c||n+r+"."+f+".min.js";else{if(!(5<=s&&p))throw new Error(t);u.src=p}h.parentNode.insertBefore(u,h)}}catch(e){e.message===t&&console.error(e)}}o[s]={init:function(){i=arguments;var t={then:function(e){return h.push({type:"t",next:e}),t},catch:function(e){return h.push({type:"c",next:e}),t}};return t},on:function(){c.push(arguments)},render:function(){a=arguments},destroy:function(){p=arguments}},o.__onWebMessengerHostReady__=function(e){if(delete o.__onWebMessengerHostReady__,o[s]=e,i)for(var t=e.init.apply(e,i),n=0;n<h.length;n++){var r=h[n];t="t"===r.type?t.then(r.next):t.catch(r.next)}a&&e.render.apply(e,a),p&&e.destroy.apply(e,p);for(n=0;n<c.length;n++)e.on.apply(e,c[n])};var n=new XMLHttpRequest;n.addEventListener("load",t),n.open("GET","https://"+e+".webloader.smooch.io/",!0),n.responseType="json",n.send()}(window,document,"Smooch","677f96a3ef02db05b7968693","5");
-</script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
+            authDomain: "protect-github.firebaseapp.com",
+            projectId: "protect-github",
+            storageBucket: "protect-github.appspot.com", // ✅ Corrected Storage Bucket
+            messagingSenderId: "837309378267",
+            appId: "1:837309378267:web:e15cd2440e3ce5c4aa26fe"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Load Zendesk Chat Widget
+        function loadZendeskChat() {
+            if (!document.getElementById("ze-snippet")) {
+                const script = document.createElement("script");
+                script.id = "ze-snippet";
+                script.src = "https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c";
+                document.body.appendChild(script);
+            }
+        }
+
+        // Authenticate user in Zendesk Messenger
+        function authenticateZendesk(user) {
+            if (window.zE) { // Ensure Zendesk is loaded
+                zE("messenger", "loginUser",
+                    function jwtCallback(callback) {
+                        fetch("http://localhost:8080/api/get-jwt", { // ✅ Use correct backend URL
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify({
+                                external_id: "himmat.kumar@acoustic.com" ,
+                                email: "himmat.kumar@acoustic.com",
+                                email_verified: true,
+                                name: "Himmat Kumar"
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.jwt) {
+                                callback(data.jwt); // ✅ Pass the JWT to Zendesk
+                            } else {
+                                console.error("JWT not found in response:", data);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching JWT:", error);
+                        });
+                    },
+                    function loginCallback(error) {
+                        if (error) {
+                            console.error("Login failed:", error);
+                        }
+                    }
+                );
+            } else {
+                console.error("Zendesk script not loaded yet.");
+            }
+        }
+
+        // Listen for Firebase auth state changes
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("Auth state changed:", user);
+
+            if (user) {
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("protected-content").style.display = "block";
+                
+                loadZendeskChat(); // Load Zendesk Chat
+                setTimeout(() => authenticateZendesk(user), 3000); // Delay to ensure Zendesk is loaded
+            } else {
+                document.getElementById("login-section").style.display = "block";
+                document.getElementById("protected-content").style.display = "none";
+            }
+        });
+
+        // Handle Login
+        function login(event) {
+            event.preventDefault(); // ✅ Prevent form reload
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    console.log("Login successful:", userCredential.user);
+                })
+                .catch(error => {
+                    document.getElementById("error-message").innerText = error.message;
+                });
+        }
+
+        // Handle Logout
+        function signOut() {
+            firebase.auth().signOut().then(() => {
+                console.log("User signed out.");
+            });
+        }
+    </script>
 </head>
 <body>
-<script>
-  Smooch.init({
-    integrationId: '677f96a3ef02db05b7968693',
-    customText: {
-        conversationListHeaderText: "📢 What's New in Connect? Click Here!"
-    }
-}).then(() => {
-    console.log("Smooch initialized successfully.");
 
-    const observerInterval = setInterval(() => {
-        const iframe = document.querySelector('iframe');
-        if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-            clearInterval(observerInterval);
+    <!-- Login Form (Only Visible if NOT Authenticated) -->
+    <div id="login-section" style="display: none;">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="login(event)">Login</button> <!-- ✅ Prevents refresh -->
+        <p id="error-message" style="color: red;"></p>
+    </div>
 
-            const observer = new MutationObserver(() => {
-                const header = iframe.contentDocument.querySelector('.conversation-group-header');
-                if (header && !header.classList.contains('customized')) {
-                    styleHeader(header);
-                    header.classList.add('customized'); // Prevent restyling
-                }
-            });
-
-            observer.observe(iframe.contentDocument.body, {
-                childList: true,
-                subtree: true
-            });
-
-            console.log("MutationObserver set up for header.");
-        }
-    }, 500);
-}).catch(err => {
-    console.error("Smooch initialization failed:", err);
-});
-
-function styleHeader(header) {
-    header.style.cursor = "pointer";
-    header.style.color = "#ffffff";
-    header.style.textDecoration = "none";
-    header.style.fontWeight = "bold";
-    header.style.fontSize = "16px";
-    header.style.display = "flex";
-    header.style.alignItems = "center";
-    header.style.justifyContent = "center";
-    header.style.padding = "10px";
-    header.style.borderRadius = "8px";
-    header.style.background = "#56d71e";
-    header.style.transition = "all 0.3s ease-in-out";
-
-    // Hover effect
-    header.onmouseover = () => {
-        header.style.background = "#4bb31a";
-    };
-    header.onmouseout = () => {
-        header.style.background = "#56d71e";
-    };
-
-    // Redirect on click
-    header.onclick = () => {
-        window.open(
-            "https://connect.goacoustic.com/hc/en-us/articles/17804578662169-What-s-new-in-Acoustic-Connect",
-            "_blank"
-        );
-    };
-
-    console.log("Header styled (via MutationObserver).");
-}
-    
-</script>
-
-<!-- <script>
-Smooch.on("widget:opened", () => {
-    console.log("Widget opened. Waiting for iframe...");
-
-    const iframePoll = setInterval(() => {
-        const iframe = document.querySelector("iframe");
-
-        if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === "complete") {
-            clearInterval(iframePoll);
-
-            const observer = new MutationObserver(() => {
-                const button = iframe.contentDocument.querySelector(".conversation-group-footer");
-                if (button && !button.classList.contains("bound")) {
-                    button.classList.add("bound");
-                    button.addEventListener("click", () => {
-                        console.log("New Conversation button clicked!");
-Smooch.createConversation()
-  .then((conversation) => {
-    console.log("New conversation created:", conversation);
-
-    // Trigger UI refresh by sending a welcome message
-    return Smooch.sendMessage({
-      type: 'text',
-      role: 'appMaker',
-      text: '👋 Welcome! How can we help you today?'
-    });
-  })
-  .then(() => {
-    console.log("Welcome message sent.");
-  })
-  .catch((err) => {
-    console.error("Error during conversation creation or message sending:", err);
-  });
-
-                    });
-                    console.log("Button listener attached.");
-                }
-            });
-
-            observer.observe(iframe.contentDocument.body, {
-                childList: true,
-                subtree: true
-            });
-
-            console.log("MutationObserver set up inside iframe.");
-        }
-    }, 500);
-});
-
-</script> -->
-
-<script>
-  window.Smooch.on('widget:opened', () => {
-  console.log('Smooch widget opened — looking for iframe...');
-
-  const iframePoller = setInterval(() => {
-    const iframe = document.querySelector('iframe');
-
-    if (!iframe) return;
-
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-    if (!iframeDoc || iframeDoc.readyState !== 'complete') return;
-
-    console.log('Iframe ready, starting persistent MutationObserver...');
-
-    const observer = new MutationObserver(() => {
-      const buttons = iframeDoc.querySelectorAll('.conversation-group-footer button');
-
-      buttons.forEach((button) => {
-        if (!button.classList.contains('bound')) {
-          console.log('🔗 Binding click to new conversation button...');
-          button.classList.add('bound');
-
-          button.addEventListener('click', async () => {
-            console.log('Button clicked! Starting typing indicator and creating conversation...');
-
-            try {
-              // Start typing indicator
-              window.Smooch.startTyping();
-              
-              // Build metadata
-              const metadata = {};
-              if (window.HelpCenter?.user?.email) {
-                metadata.zendesk_ticket_field_38730792628121 = window.HelpCenter.user.email;
-                console.log('Email metadata set:', metadata.zendesk_ticket_field_38730792628121);
-              } else {
-                console.warn('HelpCenter.user.email not available, skipping metadata.');
-              }
-
-              // Create conversation with metadata
-              // const conversation = await window.Smooch.createConversation({ metadata });
-              // console.log('Conversation created:', conversation);
-
-              // // Create conversation
-              const conversation = await window.Smooch.createConversation();
-              console.log('Conversation created:', conversation);
-
-              // Stop typing indicator
-              window.Smooch.stopTyping();
-
-              if (
-                window.Smooch?.loadConversation &&
-                conversation?.id &&
-                window.Smooch.getConversations().length > 1
-              ) {
-                await window.Smooch.loadConversation(conversation.id);
-                if (window.getLoadingState?.()) {
-                  window.showLoadingIndicator?.(true, 'conversation');
-                }
-              }
-            } catch (e) {
-              // Stop typing even on error
-              window.Smooch.stopTyping();
-
-              console.error('Error creating conversation:', e);
-              window.widgetEvent?.('error');
-              window.error?.('Conversation creation failed.', {
-                error: e.toString(),
-                stack: e.stack,
-              });
-            }
-          });
-        }
-      });
-    });
-
-    observer.observe(iframeDoc.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    clearInterval(iframePoller);
-  }, 300);
-});
-
-</script>
-
+    <!-- Protected Content (Only Visible if Authenticated) -->
+    <div id="protected-content" style="display: none;">
+        <h1>Welcome to the Protected Page</h1>
+        <p>Only logged-in users can see this.</p>
+        <button onclick="signOut()">Logout</button>
+    </div>
 
 </body>
 </html>
