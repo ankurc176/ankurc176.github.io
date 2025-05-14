@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
     -->
 
-    <script>
+<!--     <script>
         /*
         const firebaseConfig = {
             apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
@@ -116,7 +116,73 @@
             });
         }
         */
-    </script>
+    </script> -->
+
+    <script>
+    // Load Zendesk Chat Widget immediately on page load
+    function loadZendeskChat() {
+        if (!document.getElementById("ze-snippet")) {
+            const script = document.createElement("script");
+            script.id = "ze-snippet";
+            script.src = "https://static.zdassets.com/ekr/snippet.js?key=897e95f0-0fab-4528-8b67-694a24d24c4c";
+            document.body.appendChild(script);
+
+            script.onload = () => {
+                console.log("Zendesk Chat loaded.");
+
+                // Optional: Authenticate to Zendesk
+                authenticateZendesk();
+            };
+        }
+    }
+
+    // Authenticate user in Zendesk Messenger using JWT
+    function authenticateZendesk() {
+        if (window.zE) {
+            zE("messenger", "loginUser",
+                function jwtCallback(callback) {
+                    fetch("http://localhost:8080/api/get-jwt", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            external_id: "himmat.kumar@acoustic.com",
+                            email: "himmat.kumar@acoustic.com",
+                            email_verified: true,
+                            name: "Himmat Kumar"
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.jwt) {
+                            callback(data.jwt);
+                        } else {
+                            console.error("JWT not found in response:", data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching JWT:", error);
+                    });
+                },
+                function loginCallback(error) {
+                    if (error) {
+                        console.error("Login failed:", error);
+                    }
+                }
+            );
+        } else {
+            console.error("Zendesk not available yet.");
+        }
+    }
+
+    // 👇 Call Zendesk chat loader right away
+    window.onload = function () {
+        loadZendeskChat();
+    };
+</script>
+
 </head>
 <body>
 
