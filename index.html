@@ -6,21 +6,25 @@
     <title>Protected Page</title>
 
     <!-- Firebase SDK -->
+    <!--
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    -->
 
     <script>
+        /*
         const firebaseConfig = {
             apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
             authDomain: "protect-github.firebaseapp.com",
             projectId: "protect-github",
-            storageBucket: "protect-github.appspot.com", // ✅ Corrected Storage Bucket
+            storageBucket: "protect-github.appspot.com",
             messagingSenderId: "837309378267",
             appId: "1:837309378267:web:e15cd2440e3ce5c4aa26fe"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        */
 
         // Load Zendesk Chat Widget
         function loadZendeskChat() {
@@ -34,17 +38,17 @@
 
         // Authenticate user in Zendesk Messenger
         function authenticateZendesk(user) {
-            if (window.zE) { // Ensure Zendesk is loaded
+            if (window.zE) {
                 zE("messenger", "loginUser",
                     function jwtCallback(callback) {
-                        fetch("http://localhost:8080/api/get-jwt", { // ✅ Use correct backend URL
+                        fetch("http://localhost:8080/api/get-jwt", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
                                 "Accept": "application/json"
                             },
                             body: JSON.stringify({
-                                external_id: "himmat.kumar@acoustic.com" ,
+                                external_id: "himmat.kumar@acoustic.com",
                                 email: "himmat.kumar@acoustic.com",
                                 email_verified: true,
                                 name: "Himmat Kumar"
@@ -53,7 +57,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.jwt) {
-                                callback(data.jwt); // ✅ Pass the JWT to Zendesk
+                                callback(data.jwt);
                             } else {
                                 console.error("JWT not found in response:", data);
                             }
@@ -73,6 +77,7 @@
             }
         }
 
+        /*
         // Listen for Firebase auth state changes
         firebase.auth().onAuthStateChanged(user => {
             console.log("Auth state changed:", user);
@@ -81,8 +86,8 @@
                 document.getElementById("login-section").style.display = "none";
                 document.getElementById("protected-content").style.display = "block";
                 
-                loadZendeskChat(); // Load Zendesk Chat
-                setTimeout(() => authenticateZendesk(user), 3000); // Delay to ensure Zendesk is loaded
+                loadZendeskChat();
+                setTimeout(() => authenticateZendesk(user), 3000);
             } else {
                 document.getElementById("login-section").style.display = "block";
                 document.getElementById("protected-content").style.display = "none";
@@ -91,8 +96,7 @@
 
         // Handle Login
         function login(event) {
-            event.preventDefault(); // ✅ Prevent form reload
-
+            event.preventDefault();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
@@ -111,6 +115,7 @@
                 console.log("User signed out.");
             });
         }
+        */
     </script>
 </head>
 <body>
@@ -120,7 +125,7 @@
         <h2>Login</h2>
         <input type="email" id="email" placeholder="Enter Email">
         <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="login(event)">Login</button> <!-- ✅ Prevents refresh -->
+        <button onclick="/*login(event)*/">Login</button>
         <p id="error-message" style="color: red;"></p>
     </div>
 
@@ -128,7 +133,7 @@
     <div id="protected-content" style="display: none;">
         <h1>Welcome to the Protected Page</h1>
         <p>Only logged-in users can see this.</p>
-        <button onclick="signOut()">Logout</button>
+        <button onclick="/*signOut()*/">Logout</button>
     </div>
 
 </body>
