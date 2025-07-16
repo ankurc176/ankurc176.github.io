@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zendesk Widget Only</title>
 
+  <!-- ✅ CSP that allows: -->
+  <!-- - Inline script via hash -->
+  <!-- - External Zendesk script via domain -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://static.zdassets.com 'sha256-rInR3wDzEKYazx7nbtyLFSd9xYZrqBvjG0mJqqyJhNE=';">
+
   <script>
     // Load Zendesk Chat Widget immediately on page load
     function loadZendeskChat() {
