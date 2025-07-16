@@ -5,16 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zendesk Widget Only</title>
 
-  <!-- ✅ CSP that allows:
-       - The exact inline script (via sha256)
-       - Zendesk's external script (via domain)
-  -->
+  <!-- ✅ Updated CSP with correct hash -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' https://static.zdassets.com 'sha256-m3K1T/ApT+VhND0fbekevgBeG58oDkxi371rRKZgDjo=';">
+    script-src 'self' https://static.zdassets.com 'sha256-mfekfVG4oUlL6kYvGblgdPWzXRn0HzqL4zVjz6fPehk=';">
 
-  <!-- ✅ Inline script with hash matching CSP -->
   <script>
+    // Load Zendesk Chat Widget immediately on page load
     function loadZendeskChat() {
       if (!document.getElementById("ze-snippet")) {
         const script = document.createElement("script");
