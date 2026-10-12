@@ -282,7 +282,9 @@
         var existing = read("nf_accounts", {})[email.toLowerCase()];
         write("nf_user", existing || { email: email, firstName: email.split("@")[0] });
         push("login", { method: "email", user_email: email });
-        location.href = "account.html";
+        // Give tag listeners (Acoustic SDK, GTM) time to handle the event before the page unloads.
+        form.querySelector("button[type=submit]").disabled = true;
+        setTimeout(function () { location.href = "account.html"; }, 800);
       });
     },
 
