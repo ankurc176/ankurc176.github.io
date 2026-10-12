@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout | Northfold Outfitters</title>
+<meta name="description" content="Northfold Outfitters, a fictional demo store for Acoustic Connect training.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/acoustic.js"></script>
+</head>
+<body data-page="checkout" class="page-checkout">
+<header id="site-header"></header>
+<main>
+<h1>Checkout</h1>
+<div class="checkout">
+  <form id="checkout-form" class="form-card" novalidate>
+    <label>Email <input type="email" name="email" id="checkout-email" autocomplete="email" required></label>
+    <label>First name <input type="text" name="firstName" id="checkout-first-name" autocomplete="given-name" required></label>
+    <label>Last name <input type="text" name="lastName" id="checkout-last-name" autocomplete="family-name" required></label>
+    <label>Address <input type="text" name="address" id="checkout-address" autocomplete="street-address"></label>
+    <p class="empty">Demo store: there is no payment step. Placing the order only saves it in your browser.</p>
+    <button type="submit" class="btn btn-primary" id="place-order">Place order</button>
+  </form>
+  <aside class="summary" id="checkout-summary"></aside>
+</div>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/products.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

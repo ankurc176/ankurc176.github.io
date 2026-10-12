@@ -1,31 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in | Northfold Outfitters</title>
+<meta name="description" content="Northfold Outfitters, a fictional demo store for Acoustic Connect training.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/acoustic.js"></script>
 </head>
-<body>
-    <h2>Login</h2>
-    <button onclick="signInWithGoogle()">Login with Google</button>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCBO03ndv_spcBn38VoncvSCJFSOkNHOmg",
-            authDomain: "protect-github.firebaseapp.com",
-        };
-        firebase.initializeApp(firebaseConfig);
-
-        function signInWithGoogle() {
-            var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider).then((result) => {
-                window.location.href = "index.html"; // Redirect to main page after login
-            }).catch((error) => {
-                console.error("Error logging in:", error);
-            });
-        }
-    </script>
+<body data-page="login" class="page-login">
+<header id="site-header"></header>
+<main>
+<h1>Sign in</h1>
+<form id="login-form" class="form-card">
+  <label>Email <input type="email" name="email" id="login-email" autocomplete="email" required></label>
+  <label>Password <input type="password" name="password" id="login-password" autocomplete="current-password" required></label>
+  <button type="submit" class="btn btn-primary" id="login-button">Sign in</button>
+  <p>New here? <a href="register.html">Create an account</a></p>
+  <p class="empty">Demo store: any email and password work. Nothing leaves your browser.</p>
+</form>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/products.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create account | Northfold Outfitters</title>
+<meta name="description" content="Northfold Outfitters, a fictional demo store for Acoustic Connect training.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/acoustic.js"></script>
+</head>
+<body data-page="register" class="page-register">
+<header id="site-header"></header>
+<main>
+<h1>Create an account</h1>
+<form id="register-form" class="form-card">
+  <label>First name <input type="text" name="firstName" id="register-first-name" autocomplete="given-name" required></label>
+  <label>Last name <input type="text" name="lastName" id="register-last-name" autocomplete="family-name" required></label>
+  <label>Email <input type="email" name="email" id="register-email" autocomplete="email" required></label>
+  <label>Password <input type="password" name="password" id="register-password" autocomplete="new-password" required></label>
+  <label><input type="checkbox" name="optin" id="register-optin"> Email me new arrivals and offers</label>
+  <button type="submit" class="btn btn-primary" id="register-button">Create account</button>
+  <p class="empty">Demo store: accounts are saved in your browser only.</p>
+</form>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/products.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

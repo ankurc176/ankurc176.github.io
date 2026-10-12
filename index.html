@@ -1,33 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zendesk Widget Only</title>
-
-
-<!--   <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' https://static.zdassets.com 'sha256-mfekfVG4oUlL6kYvGblgdPWzXRn0HzqL4zVjz6fPehk=';">
- -->
-  <script>
-    // Load Zendesk Chat Widget immediately on page load
-    function loadZendeskChat() {
-      if (!document.getElementById("ze-snippet")) {
-        const script = document.createElement("script");
-        script.id = "ze-snippet";
-        script.src = "https://static.zdassets.com/ekr/snippet.js?key=897f0-0b-458b2";
-        document.body.appendChild(script);
-      }
-    }
-
-    window.onload = function () {
-      loadZendeskChat();
-    };
-  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home | Northfold Outfitters</title>
+<meta name="description" content="Northfold Outfitters, a fictional demo store for Acoustic Connect training.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/acoustic.js"></script>
 </head>
-
-<body>
-  <p>test</p>
+<body data-page="home" class="page-home">
+<header id="site-header"></header>
+<main>
+<section class="hero">
+  <h1>Made for the long way round</h1>
+  <p>Knitwear, outerwear and home goods built to last. <a href="category.html?c=women">Shop women</a> · <a href="category.html?c=men">Shop men</a></p>
+</section>
+<h2>Featured</h2>
+<div class="grid" id="featured"></div>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/products.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>
