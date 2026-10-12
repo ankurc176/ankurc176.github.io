@@ -295,16 +295,29 @@
         accounts[user.email.toLowerCase()] = user;
         write("nf_accounts", accounts);
         write("nf_user", user);
-        push("sign_up", { method: "email", user_email: user.email });
-        location.href = "account.html?registered=1";
+        write("nf_just_registered", true);
+        location.href = "register-success.html";
       });
+    },
+
+    registered: function () {
+      var user = getUser();
+      if (!user) { location.href = "register.html"; return; }
+      document.getElementById("registration-success").innerHTML =
+        "<h1>Welcome to Northfold, " + esc(user.firstName || "there") + "</h1>" +
+        '<p class="notice">Your account has been created for <span id="registered-email">' + esc(user.email) + "</span>.</p>" +
+        '<p><a class="btn btn-primary" href="index.html">Start shopping</a> <a class="btn" href="account.html">Your account</a></p>';
+      // Fire sign_up once, on the first load after registering.
+      if (read("nf_just_registered", false)) {
+        push("sign_up", { method: "email", user_email: user.email });
+        try { localStorage.removeItem("nf_just_registered"); } catch (e) { /* ignore */ }
+      }
     },
 
     account: function () {
       var user = getUser();
       if (!user) { location.href = "login.html"; return; }
       document.getElementById("account").innerHTML =
-        (qs("registered") ? '<p class="notice">Your account has been created.</p>' : "") +
         "<h1>Hi, " + esc(user.firstName || "there") + "</h1>" +
         '<p>Signed in as <span id="account-email">' + esc(user.email) + "</span></p>" +
         '<button class="btn" id="sign-out">Sign out</button>';
